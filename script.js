@@ -1,4 +1,3 @@
-// 🔧 COLOQUE A URL DO SEU N8N AQUI:
 const N8N_WEBHOOK_URL = "https://seu-n8n.app.n8n.cloud/webhook/curriculia";
 const N8N_WEBHOOK_PDF_URL = "https://enricocardosobarbosa.app.n8n.cloud/webhook/curriculia-pdf"
 
