@@ -171,3 +171,33 @@ document.addEventListener('change', (e) => {
         document.getElementById('pdfFileName').textContent = fileName || '';
     }
 });
+
+const dropZone = document.querySelector('#tab-pdf label');
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#2563eb';
+    dropZone.style.background = '#eff6ff';
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = '#e2e8f0';
+    dropZone.style.background = 'transparent';
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#e2e8f0';
+    dropZone.style.background = 'transparent';
+    
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') {
+        const fileInput = document.getElementById('pdfInput');
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+        document.getElementById('pdfFileName').textContent = file.name;
+    } else {
+        showToast('Por favor, solte apenas arquivos PDF', 'error');
+    }
+});
