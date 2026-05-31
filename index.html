@@ -79,7 +79,13 @@
                 </div>
 
                 <div id="tab-pdf" class="form-content">
-                    <div style="border: 2px dashed #e2e8f0; border-radius: 1rem; padding: 3rem; text-align: center;"><i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #2563eb;"></i><p><strong>Arraste seu PDF aqui</strong></p><p style="font-size: 0.8rem;">ou clique para selecionar</p></div>
+                    <label for="pdfInput" style="border: 2px dashed #e2e8f0; border-radius: 1rem; padding: 3rem; text-align: center; display: block; cursor: pointer;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #2563eb;"></i>
+                        <p><strong>Arraste seu PDF aqui</strong></p>
+                        <p style="font-size: 0.8rem;">ou clique para selecionar</p>
+                        <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+                        <p id="pdfFileName" style="margin-top: 1rem; font-size: 0.85rem; color: #2563eb;"></p>
+                    </label>
                 </div>
 
                 <div id="tab-docx" class="form-content">
