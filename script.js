@@ -59,18 +59,13 @@ document.getElementById('btnGenerate').addEventListener('click', async () => {
             return;
         }
 
-        if (currentTab === 'docx') {
-            showToast('Função DOCX será implementada em breve', 'info');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
-            return;
-        }
-
         const dados = {
             nome: document.getElementById('nome').value,
             email: document.getElementById('email').value,
             telefone: document.getElementById('telefone').value,
-            area: document.getElementById('area').value,
+            area: document.getElementById('area').value === 'outra' 
+            ? document.getElementById('areaOutra').value 
+            : document.getElementById('area').value,
             experiencias: document.getElementById('experiencias').value,
             formacao: document.getElementById('formacao').value,
             habilidades: document.getElementById('habilidades').value,
@@ -167,3 +162,44 @@ dropZone.addEventListener('drop', (e) => {
         showToast('Por favor, solte apenas arquivos PDF', 'error');
     }
 });
+
+function typeText(elementId, text, delay = 0) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            const el = document.getElementById(elementId);
+            if (!el) return resolve();
+            el.textContent = '';
+            let i = 0;
+            const interval = setInterval(() => {
+                el.textContent += text[i];
+                i++;
+                if (i >= text.length) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 18);
+        }, delay);
+    });
+}
+
+async function runCardAnimation() {
+    const footer = document.querySelector('.ai-card-footer');
+    const ids = ['animName', 'animExp', 'animForm', 'animSkills'];
+    ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+    if (footer) footer.classList.remove('visible');
+
+    await typeText('animName', 'João Silva', 300);
+    await typeText('animExp', 'Dev Front-end · Empresa X · 2022–2024', 200);
+    await typeText('animForm', 'Ciência da Computação · Universidade ABC', 200);
+    await typeText('animSkills', 'JavaScript · Python · React · Node.js', 200);
+
+    setTimeout(() => { if (footer) footer.classList.add('visible'); }, 300);
+    setTimeout(runCardAnimation, 4000);
+}
+
+runCardAnimation();
+
+function toggleOutraArea(select) {
+    const input = document.getElementById('areaOutra');
+    input.style.display = select.value === 'outra' ? 'block' : 'none';
+}

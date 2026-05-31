@@ -529,3 +529,88 @@
             .hero-image img { max-width: 100%; }
             .btn-secondary { margin-left: 0; margin-top: 1rem; display: inline-block; }
         }
+
+.ai-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: var(--shadow-elegant);
+    font-family: 'Inter', sans-serif;
+}
+
+.ai-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+.ai-card-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.ai-card-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1f2e;
+    margin-bottom: 0.75rem;
+    min-height: 2rem;
+}
+
+.ai-card-line {
+    height: 2px;
+    background: #1a1f2e;
+    margin-bottom: 1.25rem;
+}
+
+.ai-card-section {
+    margin-bottom: 1rem;
+}
+
+.ai-card-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+}
+
+.ai-card-text {
+    font-size: 0.82rem;
+    color: #334155;
+    line-height: 1.5;
+    min-height: 1.2rem;
+}
+
+.ai-card-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.8rem;
+    color: #22c55e;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.ai-card-footer.visible {
+    opacity: 1;
+}

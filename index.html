@@ -29,19 +29,41 @@
         <div class="container hero-grid">
             <div class="hero-content">
                 <h1>Seu currículo, <span>reescrito</span> pela inteligência.</h1>
-                <p>Envie um PDF, um DOCX ou digite seus dados. A CurriculIA transforma tudo num currículo profissional pronto para a vaga em até 2 minutos.</p>
+                <p>Envie um PDF, um DOCX ou digite seus dados. A CurriculIA transforma tudo num currículo profissional pronto para a vaga em até 1 minuto.</p>
                 <div>
                     <a href="#criar" class="btn-primary">Criar meu currículo</a>
                     <a href="#como-funciona" class="btn-secondary">▶ Ver como funciona</a>
                 </div>
                 <div class="stats">
-                    <div class="stat-item"><div class="stat-number">+12k</div><div class="stat-label">currículos gerados</div></div>
-                    <div class="stat-item"><div class="stat-number">98%</div><div class="stat-label">de aprovação ATS</div></div>
-                    <div class="stat-item"><div class="stat-number">2min</div><div class="stat-label">tempo médio</div></div>
+                    <div class="stat-item"><div class="stat-number">1min</div><div class="stat-label">tempo médio</div></div>
+                    <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">seguro</div></div>
+                    <div class="stat-item"><div class="stat-number">PDF</div><div class="stat-label">pronto para baixar</div></div>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="" alt="Currículo gerado pela CurriculIA">
+                <div class="ai-card">
+                    <div class="ai-card-header">
+                        <div class="ai-card-dot"></div>
+                        <span>CurriculIA está gerando...</span>
+                    </div>
+                    <div class="ai-card-name" id="animName"></div>
+                    <div class="ai-card-line"></div>
+                    <div class="ai-card-section">
+                        <div class="ai-card-label">EXPERIÊNCIA</div>
+                        <div class="ai-card-text" id="animExp"></div>
+                    </div>
+                    <div class="ai-card-section">
+                        <div class="ai-card-label">FORMAÇÃO</div>
+                        <div class="ai-card-text" id="animForm"></div>
+                    </div>
+                    <div class="ai-card-section">
+                        <div class="ai-card-label">HABILIDADES</div>
+                        <div class="ai-card-text" id="animSkills"></div>
+                    </div>
+                    <div class="ai-card-footer">
+                        <i class="fas fa-check-circle"></i> Currículo pronto em PDF
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -57,7 +79,6 @@
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="text"><i class="fas fa-pen"></i> Digitar</button>
                     <button class="tab-btn" data-tab="pdf"><i class="fas fa-file-pdf"></i> PDF</button>
-                    <button class="tab-btn" data-tab="docx"><i class="fas fa-file-word"></i> DOCX</button>
                 </div>
 
                 <div id="tab-text" class="form-content active">
@@ -67,7 +88,15 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group"><label>Telefone</label><input type="tel" id="telefone" placeholder="(11) 99999-9999"></div>
-                        <div class="form-group"><label>Área de atuação</label><select id="area"><option value="Tecnologia">Tecnologia/Programação</option><option value="Marketing">Marketing/Digital</option><option value="Vendas">Vendas/Comercial</option></select></div>
+                        <div class="form-group"><label>Área de atuação</label>
+                            <select id="area" onchange="toggleOutraArea(this)">
+                                <option value="Tecnologia">Tecnologia/Programação</option>
+                                <option value="Marketing">Marketing/Digital</option>
+                                <option value="Vendas">Vendas/Comercial</option>
+                                <option value="outra">Outra</option>
+                            </select>
+                            <input type="text" id="areaOutra" placeholder="Digite sua área" style="display:none; margin-top: 0.5rem;">
+                        </div>
                     </div>
                     <div class="form-group"><label>Experiências profissionais</label><textarea id="experiencias" placeholder="Ex: Desenvolvedor Front-end - Empresa X (2022-2024)"></textarea></div>
                     <div class="form-group"><label>Formação acadêmica</label><textarea id="formacao" placeholder="Ex: Bacharelado em Ciência da Computação - Universidade ABC"></textarea></div>
@@ -87,10 +116,6 @@
                     </label>
                 </div>
 
-                <div id="tab-docx" class="form-content">
-                    <div style="border: 2px dashed #e2e8f0; border-radius: 1rem; padding: 3rem; text-align: center;"><i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #2563eb;"></i><p><strong>Arraste seu DOCX aqui</strong></p><p style="font-size: 0.8rem;">ou clique para selecionar</p></div>
-                </div>
-
                 <button class="btn-generate" id="btnGenerate"><i class="fas fa-sparkles"></i> Gerar meu currículo com IA</button>
                 <p style="text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 1rem;"><i class="fas fa-lock"></i> Processamento seguro · Seus dados nunca são compartilhados</p>
             </div>
@@ -105,7 +130,7 @@
                 <p>Em 3 passos simples você tem um currículo profissional</p>
             </div>
             <div class="steps">
-                <div class="step-card"><div class="step-icon"><i class="fas fa-upload"></i></div><h3>1. Envie seus dados</h3><p>Upload de PDF, DOCX ou preencha manualmente</p></div>
+                <div class="step-card"><div class="step-icon"><i class="fas fa-upload"></i></div><h3>1. Envie seus dados</h3><p>Upload de PDF ou preencha manualmente</p></div>
                 <div class="step-card"><div class="step-icon"><i class="fas fa-magic"></i></div><h3>2. IA processa</h3><p>Nossa IA analisa e estrutura profissionalmente</p></div>
                 <div class="step-card"><div class="step-icon"><i class="fas fa-download"></i></div><h3>3. Baixe seu currículo</h3><p>Receba seu currículo pronto e otimizado</p></div>
             </div>
@@ -119,12 +144,12 @@
                 <h2>Tudo que você precisa para ser contratado</h2>
             </div>
             <div class="features-grid">
-                <div class="feature-card"><div class="feature-icon"><i class="fas fa-chart-line"></i></div><h3>Otimizado para ATS</h3><p>Passe pelos filtros automáticos</p></div>
-                <div class="feature-card"><div class="feature-icon"><i class="fas fa-language"></i></div><h3>Multi-idioma</h3><p>Português, inglês e espanhol</p></div>
-                <div class="feature-card"><div class="feature-icon"><i class="fas fa-bolt"></i></div><h3>Pronto em 2 minutos</h3><p>Velocidade de máquina</p></div>
-                <div class="feature-card"><div class="feature-icon"><i class="fas fa-download"></i></div><h3>PDF & Word</h3><p>Exporte nos formatos que o RH abre</p></div>
-                <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3>100% privado</h3><p>Seus dados criptografados</p></div>
-                <div class="feature-card"><div class="feature-icon"><i class="fas fa-layer-group"></i></div><h3>Vários templates</h3><p>Modelos modernos e criativos</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-bolt"></i></div><h3>Pronto em 1 minuto</h3><p>Da entrada ao PDF final em menos de 1 minuto</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-file-pdf"></i></div><h3>Exporta em PDF</h3><p>Currículo gerado diretamente em PDF pronto para enviar</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-upload"></i></div><h3>Aceita PDF e texto</h3><p>Envie um PDF existente ou preencha os dados manualmente</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-robot"></i></div><h3>IA que refina o texto</h3><p>Corrige gramática e melhora a clareza sem inventar informações</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-ban"></i></div><h3>Sem dados inventados</h3><p>A IA usa apenas o que você fornece, sem adicionar nada fictício</p></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-align-left"></i></div><h3>Estrutura profissional</h3><p>Organiza suas informações em seções claras e bem formatadas</p></div>
             </div>
         </div>
     </section>
