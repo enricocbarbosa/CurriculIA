@@ -1,4 +1,4 @@
-const N8N_WEBHOOK_URL = "https://seu-n8n.app.n8n.cloud/webhook/curriculia";
+const N8N_WEBHOOK_URL = "https://enricocardosobarbosa.app.n8n.cloud/webhook/curriculia-text";
 const N8N_WEBHOOK_PDF_URL = "https://enricocardosobarbosa.app.n8n.cloud/webhook/curriculia-pdf"
 
 let currentTab = "text";
@@ -91,16 +91,26 @@ document.getElementById('btnGenerate').addEventListener('click', async () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dados)
             });
-            if (response.ok) curriculum = await response.text();
-            else throw new Error('n8n não respondeu');
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'curriculo_gerado.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Currículo gerado com sucesso!', 'success');
+                return;
+            } else {
+                throw new Error('n8n não respondeu');
+            }
         } catch (error) {
             curriculum = gerarCurriculoSimulado(dados);
             showToast('Modo demonstração - Conecte o n8n para usar IA real', 'warning');
+            generatedCurriculum = curriculum;
+            document.getElementById('curriculumResult').innerHTML = curriculum.replace(/\n/g, '<br>');
+            document.getElementById('modal').classList.add('active');
         }
-
-        generatedCurriculum = curriculum;
-        document.getElementById('curriculumResult').innerHTML = curriculum.replace(/\n/g, '<br>');
-        document.getElementById('modal').classList.add('active');
 
     } catch (error) {
         showToast('Erro ao gerar currículo', 'error');
@@ -110,49 +120,6 @@ document.getElementById('btnGenerate').addEventListener('click', async () => {
     }
 });
 
-function gerarCurriculoSimulado(dados) {
-    return `
-╔══════════════════════════════════════════════════════════╗
-║                    CURRICULIA.AI                         ║
-╚══════════════════════════════════════════════════════════╝
-
-📌 ${dados.nome || 'Candidato'}
-
-🎯 OBJETIVO PROFISSIONAL
-Profissional da área de ${dados.area || 'Tecnologia'}
-
-💼 EXPERIÊNCIA PROFISSIONAL
-${dados.experiencias || 'Experiência a ser detalhada'}
-
-🎓 FORMAÇÃO
-${dados.formacao || 'Informação não fornecida'}
-
-⚡ HABILIDADES
-${dados.habilidades || 'A serem descritas'}
-
-🌐 IDIOMAS
-${dados.idiomas || 'Não informado'}
-
-📞 CONTATO
-${dados.email ? `E-mail: ${dados.email}` : ''}
-${dados.telefone ? `Telefone: ${dados.telefone}` : ''}
-
-✨ Gerado por CurriculIA - ${new Date().toLocaleDateString()}
-⚠️ Modo demonstração: Conecte ao n8n para IA real
-            `.trim();
-        }
-
-function closeModal() { document.getElementById('modal').classList.remove('active'); }
-function copyCurriculum() { navigator.clipboard.writeText(generatedCurriculum); showToast('Copiado!', 'success'); }
-function downloadCurriculum() {
-    const blob = new Blob([generatedCurriculum], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `curriculo_${new Date().toISOString().slice(0,10)}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-}
 
 function showToast(message, type) {
     const toast = document.createElement('div');
