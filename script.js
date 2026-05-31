@@ -1,78 +1,120 @@
 // 🔧 COLOQUE A URL DO SEU N8N AQUI:
-        const N8N_WEBHOOK_URL = "https://seu-n8n.app.n8n.cloud/webhook/curriculia";
+const N8N_WEBHOOK_URL = "https://seu-n8n.app.n8n.cloud/webhook/curriculia";
+const N8N_WEBHOOK_PDF_URL = "https://enricocardosobarbosa.app.n8n.cloud/webhook/curriculia-pdf"
 
-        let currentTab = "text";
-        let generatedCurriculum = "";
+let currentTab = "text";
+let generatedCurriculum = "";
 
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentTab = btn.dataset.tab;
-                document.querySelectorAll('.form-content').forEach(content => content.classList.remove('active'));
-                document.getElementById(`tab-${currentTab}`).classList.add('active');
-            });
-        });
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTab = btn.dataset.tab;
+        document.querySelectorAll('.form-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(`tab-${currentTab}`).classList.add('active');
+    });
+});
 
-        document.getElementById('btnGenerate').addEventListener('click', async () => {
-            const btn = document.getElementById('btnGenerate');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading-spinner"></span> Gerando...';
+document.getElementById('btnGenerate').addEventListener('click', async () => {
+    const btn = document.getElementById('btnGenerate');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Gerando...';
 
-            try {
-                if (currentTab !== 'text') {
-                    showToast('Função de upload será implementada em breve', 'info');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
-                    return;
-                }
-
-                const dados = {
-                    nome: document.getElementById('nome').value,
-                    email: document.getElementById('email').value,
-                    telefone: document.getElementById('telefone').value,
-                    area: document.getElementById('area').value,
-                    experiencias: document.getElementById('experiencias').value,
-                    formacao: document.getElementById('formacao').value,
-                    habilidades: document.getElementById('habilidades').value,
-                    idiomas: document.getElementById('idiomas').value
-                };
-
-                if (!dados.nome) {
-                    showToast('Por favor, preencha seu nome', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
-                    return;
-                }
-
-                let curriculum;
-                try {
-                    const response = await fetch(N8N_WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(dados)
-                    });
-                    if (response.ok) curriculum = await response.text();
-                    else throw new Error('n8n não respondeu');
-                } catch (error) {
-                    curriculum = gerarCurriculoSimulado(dados);
-                    showToast('Modo demonstração - Conecte o n8n para usar IA real', 'warning');
-                }
-
-                generatedCurriculum = curriculum;
-                document.getElementById('curriculumResult').innerHTML = curriculum.replace(/\n/g, '<br>');
-                document.getElementById('modal').classList.add('active');
-
-            } catch (error) {
-                showToast('Erro ao gerar currículo', 'error');
-            } finally {
+    try {
+        if (currentTab === 'pdf') {
+            const fileInput = document.getElementById('pdfInput');
+            if (!fileInput || !fileInput.files[0]) {
+                showToast('Por favor, selecione um arquivo PDF', 'error');
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
+                return;
             }
-        });
 
-        function gerarCurriculoSimulado(dados) {
-            return `
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result.split(',')[1];
+
+                try {
+                    const response = await fetch(N8N_WEBHOOK_PDF_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pdfBase64: base64 })
+                    });
+
+                    if (!response.ok) throw new Error('Erro no servidor');
+
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'curriculo_gerado.pdf';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showToast('Currículo gerado com sucesso!', 'success');
+                } catch (error) {
+                    showToast('Erro ao gerar currículo', 'error');
+                }
+
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+            return;
+        }
+
+        if (currentTab === 'docx') {
+            showToast('Função DOCX será implementada em breve', 'info');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
+            return;
+        }
+
+        const dados = {
+            nome: document.getElementById('nome').value,
+            email: document.getElementById('email').value,
+            telefone: document.getElementById('telefone').value,
+            area: document.getElementById('area').value,
+            experiencias: document.getElementById('experiencias').value,
+            formacao: document.getElementById('formacao').value,
+            habilidades: document.getElementById('habilidades').value,
+            idiomas: document.getElementById('idiomas').value
+        };
+
+        if (!dados.nome) {
+            showToast('Por favor, preencha seu nome', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
+            return;
+        }
+
+        let curriculum;
+        try {
+            const response = await fetch(N8N_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+            if (response.ok) curriculum = await response.text();
+            else throw new Error('n8n não respondeu');
+        } catch (error) {
+            curriculum = gerarCurriculoSimulado(dados);
+            showToast('Modo demonstração - Conecte o n8n para usar IA real', 'warning');
+        }
+
+        generatedCurriculum = curriculum;
+        document.getElementById('curriculumResult').innerHTML = curriculum.replace(/\n/g, '<br>');
+        document.getElementById('modal').classList.add('active');
+
+    } catch (error) {
+        showToast('Erro ao gerar currículo', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
+    }
+});
+
+function gerarCurriculoSimulado(dados) {
+    return `
 ╔══════════════════════════════════════════════════════════╗
 ║                    CURRICULIA.AI                         ║
 ╚══════════════════════════════════════════════════════════╝
@@ -103,24 +145,31 @@ ${dados.telefone ? `Telefone: ${dados.telefone}` : ''}
             `.trim();
         }
 
-        function closeModal() { document.getElementById('modal').classList.remove('active'); }
-        function copyCurriculum() { navigator.clipboard.writeText(generatedCurriculum); showToast('Copiado!', 'success'); }
-        function downloadCurriculum() {
-            const blob = new Blob([generatedCurriculum], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `curriculo_${new Date().toISOString().slice(0,10)}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+function copyCurriculum() { navigator.clipboard.writeText(generatedCurriculum); showToast('Copiado!', 'success'); }
+function downloadCurriculum() {
+    const blob = new Blob([generatedCurriculum], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `curriculo_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
 
-        function showToast(message, type) {
-            const toast = document.createElement('div');
-            toast.style.cssText = `position:fixed;bottom:20px;right:20px;background:${type === 'error' ? '#ef4444' : type === 'success' ? '#22c55e' : type === 'warning' ? '#f59e0b' : '#3b82f6'};color:white;padding:12px 20px;border-radius:12px;z-index:9999;`;
-            toast.innerHTML = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `position:fixed;bottom:20px;right:20px;background:${type === 'error' ? '#ef4444' : type === 'success' ? '#22c55e' : type === 'warning' ? '#f59e0b' : '#3b82f6'};color:white;padding:12px 20px;border-radius:12px;z-index:9999;`;
+    toast.innerHTML = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
 
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+document.addEventListener('change', (e) => {
+    if (e.target.id === 'pdfInput') {
+        const fileName = e.target.files[0]?.name;
+        document.getElementById('pdfFileName').textContent = fileName || '';
+    }
+});
