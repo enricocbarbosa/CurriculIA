@@ -30,35 +30,33 @@ document.getElementById('btnGenerate').addEventListener('click', async () => {
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const base64 = e.target.result.split(',')[1];
+            const base64 = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+                reader.readAsDataURL(fileInput.files[0]);
+            });
 
-                try {
-                    const response = await fetch(N8N_WEBHOOK_PDF_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ pdfBase64: base64 })
-                    });
-
-                    if (!response.ok) throw new Error('Erro no servidor');
-
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'curriculo_gerado.pdf';
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    showToast('Currículo gerado com sucesso!', 'success');
-                } catch (error) {
-                    showToast('Erro ao gerar currículo', 'error');
-                }
-
+            try {
+                const response = await fetch(N8N_WEBHOOK_PDF_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pdfBase64: base64 })
+                });
+                if (!response.ok) throw new Error('Erro no servidor');
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'curriculo_gerado.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Currículo gerado com sucesso!', 'success');
+            } catch (error) {
+                showToast('Erro ao gerar currículo', 'error');
+            } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-sparkles"></i> Gerar meu currículo com IA';
-            };
-            reader.readAsDataURL(fileInput.files[0]);
+            }
             return;
         }
 
