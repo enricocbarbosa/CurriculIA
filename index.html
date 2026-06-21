@@ -17,7 +17,8 @@
             <a href="#" class="logo">Curricul<span>IA</span></a>
             <div class="nav-links">
                 <a href="#como-funciona">Como funciona</a>
-                <a href="#criar">Criar currículo</a>
+                <a href="#criar">Criar</a>
+                <a href="#revisar">Revisar</a>
                 <a href="#recursos">Recursos</a>
             </div>
         </div>
@@ -117,6 +118,48 @@
 
                 <button class="btn-generate" id="btnGenerate"><i class="fas fa-sparkles"></i> Gerar meu currículo com IA</button>
                 <p style="text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 1rem;"><i class="fas fa-lock"></i> Processamento seguro · Seus dados nunca são compartilhados</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Revisão de Currículo -->
+    <section id="revisar" class="form-section" style="padding-top: 0;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Revise seu currículo</h2>
+                <p>Envie seu currículo e receba sugestões detalhadas da IA</p>
+            </div>
+            <div class="form-card">
+                <label for="pdfReview" style="border: 2px dashed #e2e8f0; border-radius: 1rem; padding: 3rem; text-align: center; display: block; cursor: pointer;">
+                    <i class="fas fa-search" style="font-size: 2rem; color: #2563eb;"></i>
+                    <p><strong>Arraste seu PDF aqui</strong></p>
+                    <p style="font-size: 0.8rem;">ou clique para selecionar</p>
+                    <input type="file" id="pdfReview" accept=".pdf" style="display: none;">
+                    <p id="reviewFileName" style="margin-top: 1rem; font-size: 0.85rem; color: #2563eb;"></p>
+                </label>
+                <button class="btn-generate" id="btnReview"><i class="fas fa-magnifying-glass"></i> Analisar currículo com IA</button>
+                <p style="text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 1rem;"><i class="fas fa-lock"></i> Processamento seguro · Seus dados nunca são compartilhados</p>
+            </div>
+
+            <div id="reviewResult" style="display:none; max-width: 800px; margin: 2rem auto 0;">
+                <div class="review-card">
+                    <h3><i class="fas fa-thumbs-up" style="color:#22c55e;"></i> Pontos Fortes</h3>
+                    <ul id="reviewFortes"></ul>
+                </div>
+                <div class="review-card">
+                    <h3><i class="fas fa-exclamation-circle" style="color:#f59e0b;"></i> Pontos a Melhorar</h3>
+                    <ul id="reviewMelhorar"></ul>
+                </div>
+                <div class="review-card">
+                    <h3><i class="fas fa-lightbulb" style="color:#2563eb;"></i> Sugestões Estratégicas</h3>
+                    <div class="review-subsection"><strong>Estrutura</strong><ul id="reviewEstrutura"></ul></div>
+                    <div class="review-subsection"><strong>Conteúdo</strong><ul id="reviewConteudo"></ul></div>
+                    <div class="review-subsection"><strong>Palavras-chave</strong><ul id="reviewPalavras"></ul></div>
+                </div>
+                <div class="review-card">
+                    <h3><i class="fas fa-robot" style="color:#2563eb;"></i> Compatibilidade ATS</h3>
+                    <div id="reviewAts"></div>
+                </div>
             </div>
         </div>
     </section>

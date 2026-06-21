@@ -614,3 +614,56 @@
 .ai-card-footer.visible {
     opacity: 1;
 }
+
+.review-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.review-card h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.review-card ul {
+    padding-left: 1.25rem;
+}
+
+.review-card ul li {
+    font-size: 0.875rem;
+    color: #334155;
+    line-height: 1.6;
+    margin-bottom: 0.4rem;
+}
+
+.review-subsection {
+    margin-bottom: 1rem;
+}
+
+.review-subsection strong {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.ats-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.ats-alta { background: #dcfce7; color: #16a34a; }
+.ats-media { background: #fef9c3; color: #ca8a04; }
+.ats-baixa { background: #fee2e2; color: #dc2626; }

@@ -1,5 +1,6 @@
-const N8N_WEBHOOK_URL = "https://curriculia.app.n8n.cloud/webhook/curriculia-text";
+const N8N_WEBHOOK_TYPE_URL = "https://curriculia.app.n8n.cloud/webhook/curriculia-text";
 const N8N_WEBHOOK_PDF_URL = "https://curriculia.app.n8n.cloud/webhook/curriculia-pdf"
+const N8N_WEBHOOK_REVIEW_URL = "https://curriculia.app.n8n.cloud/webhook-test/curriculia-review";
 
 let currentTab = "text";
 let generatedCurriculum = "";
@@ -81,7 +82,7 @@ document.getElementById('btnGenerate').addEventListener('click', async () => {
 
         let curriculum;
         try {
-            const response = await fetch(N8N_WEBHOOK_URL, {
+            const response = await fetch(N8N_WEBHOOK_TYPE_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dados)
@@ -203,3 +204,66 @@ function toggleOutraArea(select) {
     const input = document.getElementById('areaOutra');
     input.style.display = select.value === 'outra' ? 'block' : 'none';
 }
+
+document.getElementById('btnReview').addEventListener('click', async () => {
+    const btn = document.getElementById('btnReview');
+    const fileInput = document.getElementById('pdfReview');
+
+    if (!fileInput || !fileInput.files[0]) {
+        showToast('Por favor, selecione um PDF para analisar', 'error');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Analisando...';
+
+    const base64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+        reader.readAsDataURL(fileInput.files[0]);
+    });
+
+    try {
+        const response = await fetch(N8N_WEBHOOK_REVIEW_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pdfBase64: base64 })
+        });
+
+        if (!response.ok) throw new Error('Erro no servidor');
+
+        const data = await response.json();
+
+        // Pontos fortes
+        document.getElementById('reviewFortes').innerHTML = data.pontos_fortes.map(p => `<li>${p}</li>`).join('');
+        // Pontos a melhorar
+        document.getElementById('reviewMelhorar').innerHTML = data.pontos_a_melhorar.map(p => `<li>${p}</li>`).join('');
+        // Sugestões
+        document.getElementById('reviewEstrutura').innerHTML = data.sugestoes_estrategicas.estrutura.map(p => `<li>${p}</li>`).join('');
+        document.getElementById('reviewConteudo').innerHTML = data.sugestoes_estrategicas.conteudo.map(p => `<li>${p}</li>`).join('');
+        document.getElementById('reviewPalavras').innerHTML = data.sugestoes_estrategicas.palavras_chave.map(p => `<li>${p}</li>`).join('');
+        // ATS
+        const nivel = data.compatibilidade_ats.nivel;
+        const badgeClass = nivel === 'Alta' ? 'ats-alta' : nivel === 'Média' ? 'ats-media' : 'ats-baixa';
+        document.getElementById('reviewAts').innerHTML = `
+            <span class="ats-badge ${badgeClass}">${nivel}</span>
+            <p style="font-size:0.875rem; color:#334155;">${data.compatibilidade_ats.justificativa}</p>
+        `;
+
+        document.getElementById('reviewResult').style.display = 'block';
+        document.getElementById('reviewResult').scrollIntoView({ behavior: 'smooth' });
+
+    } catch (error) {
+        showToast('Erro ao analisar currículo', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Analisar currículo com IA';
+    }
+});
+
+document.addEventListener('change', (e) => {
+    if (e.target.id === 'pdfReview') {
+        const fileName = e.target.files[0]?.name;
+        document.getElementById('reviewFileName').textContent = fileName || '';
+    }
+});
