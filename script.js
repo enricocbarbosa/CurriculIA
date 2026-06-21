@@ -1,6 +1,6 @@
 const N8N_WEBHOOK_TYPE_URL = "https://curriculia.app.n8n.cloud/webhook/curriculia-text";
 const N8N_WEBHOOK_PDF_URL = "https://curriculia.app.n8n.cloud/webhook/curriculia-pdf"
-const N8N_WEBHOOK_REVIEW_URL = "https://curriculia.app.n8n.cloud/webhook-test/curriculia-review";
+const N8N_WEBHOOK_REVIEW_URL = "https://curriculia.app.n8n.cloud/webhook/curriculia-review";
 
 let currentTab = "text";
 let generatedCurriculum = "";
