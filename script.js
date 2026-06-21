@@ -1,4 +1,4 @@
-const N8N_WEBHOOK_URL = "https://enricocardosobarbosa.app.n8n.cloud/webhook/curriculia-text";
+const N8N_WEBHOOK_URL = "https://curriculia.app.n8n.cloud/webhook/curriculia-text";
 const N8N_WEBHOOK_PDF_URL = "https://enricocardosobarbosa.app.n8n.cloud/webhook/curriculia-pdf"
 
 let currentTab = "text";
